@@ -1,0 +1,50 @@
+<html>
+
+<head>
+    <title>ChatJS test</title>
+    <style>
+        form {
+            padding: 20px;
+        }
+
+        #chatInput {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 36px;
+            line-height: 36px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="body">
+
+    </div>
+    <form action="javascript:sendForm()">
+        <input type="text" placeholder="Write your message..." id="chatInput">
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha256-bQmrZe4yPnQrLTY+1gYylfNMBuGfnT/HKsCGX+9Xuqo=" crossorigin="anonymous"></script>
+    <script>
+        const serverUrl = 'http://localhost:3000'
+        const clientSocket = io(serverUrl)
+        let chatInput = document.getElementById('chatInput')
+        let body = document.getElementById('body')
+
+        // send form method
+        function sendForm() {
+            console.log('sending', chatInput.value)
+            clientSocket.emit('sendmessage', chatInput.value)
+            chatInput.value = ''
+        }
+
+        // receiving messages from server
+        clientSocket.on('receivemessage', function(params) {
+            body.innerHTML += `<br>${params}`
+        })
+    </script>
+</body>
+
+</html>
